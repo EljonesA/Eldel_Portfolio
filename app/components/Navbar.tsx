@@ -5,8 +5,10 @@ import Link from 'next/link'
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
+  const [showAssessmentDropdown, setShowAssessmentDropdown] = useState(false)
 
-  const navItems = ['Home', 'About', 'Services', 'Contact']
+  const navItems = ['Home', 'About', 'Contact']
+  const assessmentTerms = ['Term 1', 'Term 2', 'Term 3']
 
   const setupObservers = useCallback(() => {
     const observers = new Map()
@@ -20,11 +22,8 @@ export default function Navbar() {
               setActiveSection(item.toLowerCase())
             }
           },
-          {
-            threshold: 0.5,
-          }
+          { threshold: 0.5 }
         )
-
         observer.observe(section)
         observers.set(item, observer)
       }
@@ -55,20 +54,36 @@ export default function Navbar() {
             <Link
               key={item}
               href={`#${item.toLowerCase()}`}
-              className={`text-[#8892b0] hover:text-[#64ffda] transition-colors relative group px-3 py-2 ${
-                activeSection === item.toLowerCase() ? 'text-[#64ffda]' : ''
-              }`}
+              className={`text-[#8892b0] hover:text-[#64ffda] transition-colors relative group px-3 py-2`}
             >
               {item}
-              <span 
-                className={`absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out ${
-                  activeSection === item.toLowerCase() 
-                    ? 'w-full' 
-                    : 'w-0 group-hover:w-full'
-                }`}
-              />
+              <span className="absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out w-0 group-hover:w-full" />
             </Link>
           ))}
+          
+          {/* Assessment Dropdown */}
+          <div 
+            className="relative group"
+            onMouseEnter={() => setShowAssessmentDropdown(true)}
+            onMouseLeave={() => setShowAssessmentDropdown(false)}
+          >
+            <button className="text-[#8892b0] hover:text-[#64ffda] transition-colors px-3 py-2">
+              Assessments
+            </button>
+            {showAssessmentDropdown && (
+              <div className="absolute top-full left-0 bg-[#112240] rounded-lg py-2 min-w-[120px]">
+                {assessmentTerms.map((term) => (
+                  <Link
+                    key={term}
+                    href="#assessments"
+                    className="block px-4 py-2 text-[#8892b0] hover:text-[#64ffda] hover:bg-[#233554] transition-colors"
+                  >
+                    {term}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Hamburger Button */}
@@ -123,6 +138,27 @@ export default function Navbar() {
                   />
                 </Link>
               ))}
+
+              {/* Assessment Dropdown in Mobile Menu */}
+              <div className="relative group">
+                <button className="text-[#8892b0] hover:text-[#64ffda] transition-colors px-3 py-2" onClick={() => setShowAssessmentDropdown(!showAssessmentDropdown)}>
+                  Assessments
+                </button>
+                {showAssessmentDropdown && (
+                  <div className="absolute top-full left-0 bg-[#112240] rounded-lg py-2 min-w-[120px]">
+                    {assessmentTerms.map((term) => (
+                      <Link
+                        key={term}
+                        href="#assessments"
+                        className="block px-4 py-2 text-[#8892b0] hover:text-[#64ffda] hover:bg-[#233554] transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {term}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -86,7 +86,7 @@ export default function About() {
             </h2>
             <div className="mb-6 px-2">
               <p className="text-[#8892b0] text-justify text-sm md:text-base leading-relaxed">
-                I am a dedicated Zoho solutions expert with over two years of experience designing and implementing customized business systems using the Zoho One ecosystem. As a certified Zoho Partner, I specialize in creating tailored solutions that streamline operations, enhance productivity, and meet the unique needs of clients across various industries, including real estate, corporate travel, and healthcare. My expertise spans CRM development, data migration, user training, and process optimization, with a proven track record of solving complex challenges, such as data formatting issues and workflow inefficiencies. Passionate about leveraging technology to transform businesses, I thrive on exploring the endless possibilities within Zoho&apos;s ecosystem to deliver innovative and impactful solutions.
+                I am a dedicated Zoho solutions expert with over two years of experience designing and implementing customized business systems using the Zoho One ecosystem.
               </p>
             </div>
 
