@@ -37,32 +37,32 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="min-h-screen bg-black flex items-center">
+    <section id="contact" className="min-h-screen bg-[#0a192f] flex items-center">
       <div className="w-full px-4 md:px-16 py-10 md:py-20">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
-            <span className="text-red-600">Contact</span>
-            <span className="text-white"> Me</span>
+            <span className="text-[#64ffda]">Contact</span>
+            <span className="text-[#ccd6f6]"> Me</span>
           </h2>
 
           <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             {/* Left Column */}
             <div className="space-y-6">
               <div>
-                <p className="text-gray-300 mb-4">
-                  Feel free to reach out to me for any inquiries about Zoho solutions and implementations.
+                <p className="text-[#8892b0] mb-4">
+                  Feel free to reach out to me for any inquiries or concerns you want to talk about.
                 </p>
                 <div className="space-y-3">
-                  <p className="text-gray-400">
-                    <span className="text-red-600">Email:</span>{' '}
-                    <a href="mailto:kajujufaith55@gmail.com" className="hover:text-red-600 transition-colors">
-                      kajujufaith55@gmail.com
+                  <p className="text-[#8892b0]">
+                    <span className="text-[#64ffda]">Email:</span>{' '}
+                    <a href="mailto:kajujufaith55@gmail.com" className="hover:text-[#64ffda] transition-colors">
+                      eldelapiyo08@gmail.com
                     </a>
                   </p>
-                  <p className="text-gray-400">
-                    <span className="text-red-600">Phone:</span>{' '}
-                    <a href="tel:+254115409504" className="hover:text-red-600 transition-colors">
-                      +254 115 409 504
+                  <p className="text-[#8892b0]">
+                    <span className="text-[#64ffda]">Phone:</span>{' '}
+                    <a href="tel:+254115409504" className="hover:text-[#64ffda] transition-colors">
+                      +254 757 260 698
                     </a>
                   </p>
                 </div>
@@ -72,27 +72,27 @@ export default function Contact() {
               <div className="flex space-x-6">
                 <a 
                   href="https://www.instagram.com/fai_kajuju/profilecard/?igsh=cnNoenNnNXJjOHhy" 
-                  className="text-gray-400 hover:text-[#E4405F] transition-colors"
+                  className="text-[#8892b0] hover:text-[#64ffda] transition-colors"
                   aria-label="Instagram"
                 >
                   <FaInstagram size={28} />
                 </a>
                 <a 
                   href="https://www.linkedin.com/in/faith-kajuju-3430a5201?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" 
-                  className="text-gray-400 hover:text-[#0A66C2] transition-colors"
+                  className="text-[#8892b0] hover:text-[#64ffda] transition-colors"
                   aria-label="LinkedIn"
                 >
                   <FaLinkedin size={28} />
                 </a>
               </div>
 
-              <a 
+              {/* <a 
                 href="/FaithKajuju-CV.pdf" 
                 download
-                className="inline-block bg-red-600 text-white px-8 py-3 rounded-lg hover:bg-red-700 transition-colors"
+                className="inline-block bg-[#64ffda] text-[#0a192f] px-8 py-3 rounded-lg hover:bg-[#64ffda]/80 transition-colors"
               >
                 Download CV
-              </a>
+              </a> */}
             </div>
 
             {/* Right Column - Form */}
@@ -101,7 +101,7 @@ export default function Contact() {
                 <input
                   type="text"
                   placeholder="Your Name"
-                  className="w-full p-4 bg-zinc-900/50 rounded-lg border border-zinc-800 text-white focus:border-red-600/50 focus:outline-none transition-colors"
+                  className="w-full p-4 bg-[#112240] rounded-lg border border-[#233554] text-[#ccd6f6] focus:border-[#64ffda] focus:outline-none transition-colors"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   required
@@ -111,7 +111,7 @@ export default function Contact() {
                 <input
                   type="email"
                   placeholder="Your Email"
-                  className="w-full p-4 bg-zinc-900/50 rounded-lg border border-zinc-800 text-white focus:border-red-600/50 focus:outline-none transition-colors"
+                  className="w-full p-4 bg-[#112240] rounded-lg border border-[#233554] text-[#ccd6f6] focus:border-[#64ffda] focus:outline-none transition-colors"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   required
@@ -121,7 +121,7 @@ export default function Contact() {
                 <textarea
                   placeholder="Your Message"
                   rows={6}
-                  className="w-full p-4 bg-zinc-900/50 rounded-lg border border-zinc-800 text-white focus:border-red-600/50 focus:outline-none transition-colors resize-none"
+                  className="w-full p-4 bg-[#112240] rounded-lg border border-[#233554] text-[#ccd6f6] focus:border-[#64ffda] focus:outline-none transition-colors resize-none"
                   value={formData.message}
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
                   required
@@ -130,7 +130,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-red-600 text-white px-6 py-4 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                className="w-full bg-[#64ffda] text-[#0a192f] px-6 py-4 rounded-lg hover:bg-[#64ffda]/80 transition-colors disabled:opacity-50"
               >
                 {isSubmitting ? 'Sending...' : 'Submit'}
               </button>

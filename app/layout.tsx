@@ -30,8 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${montserrat.className} antialiased bg-black`}>
+    <html lang="en">      <body className={`${montserrat.className} antialiased`}>
         <Navbar />
         {children}
         <Footer />
