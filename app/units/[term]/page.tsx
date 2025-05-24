@@ -1,7 +1,8 @@
 'use client'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import AssessorModal from '../../components/AssessorModal'
+import { getUnits, createUnit } from '@/sanity/lib/client'
 
 type Unit = {
   code: string
@@ -9,87 +10,6 @@ type Unit = {
   description: string
   grade?: string
   status: 'completed' | 'in-progress' | 'upcoming'
-}
-
-const termUnits: Record<string, Unit[]> = {
-  '1': [
-    {
-      code: 'MATH101',
-      name: 'Basic Mathematics',
-      description: 'Fundamental mathematical concepts and problem-solving techniques',
-      grade: 'A',
-      status: 'completed'
-    },
-    {
-      code: 'ENG101',
-      name: 'Communication Skills',
-      description: 'Effective communication in academic and professional contexts',
-      grade: 'B+',
-      status: 'completed'
-    },
-    {
-      code: 'CS102',
-      name: 'Introduction to Programming',
-      description: 'Basics of programming logic using Python and problem-solving techniques',
-      grade: 'A-',
-      status: 'upcoming'
-    },
-    {
-      code: 'PHY103',
-      name: 'Physics Fundamentals',
-      description: 'Core concepts in mechanics, motion, and energy',
-      grade: 'B',
-      status: 'in-progress'
-    },
-    {
-      code: 'HIS105',
-      name: 'World History',
-      description: 'An overview of major civilizations and global historical events',
-      grade: 'A',
-      status: 'in-progress'
-    },
-    {
-      code: 'BIO106',
-      name: 'General Biology',
-      description: 'Principles of cell biology, genetics, and ecosystems',
-      grade: 'B+',
-      status: 'in-progress'
-    },
-    {
-      code: 'CSC201',
-      name: 'Data Structures and Algorithms',
-      description: 'In-depth study of data organization and computational efficiency',
-      grade: 'A-',
-      status: 'completed'
-    },
-    {
-      code: 'ECO101',
-      name: 'Principles of Economics',
-      description: 'Micro and macroeconomic principles affecting individuals and nations',
-      grade: 'B+',
-      status: 'upcoming'
-    },
-    {
-      code: 'ART110',
-      name: 'Introduction to Visual Arts',
-      description: 'Exploration of art forms, techniques, and historical movements',
-      grade: 'C',
-      status: 'upcoming'
-    },
-    {
-      code: 'INF120',
-      name: 'Information Systems',
-      description: 'Role of information systems in business and decision-making',
-      grade: 'D',
-      status: 'completed'
-    }
-  ],
-  '2': [
-    // Term 2 units
-  ],
-  '3': [
-    // Term 3 units
-  ]
 }
 
 function EmptyState() {
@@ -123,20 +43,48 @@ function EmptyState() {
 export default function UnitsPage() {
   const params = useParams()
   const term = params.term as string
-  const units = termUnits[term] || []
+  const [units, setUnits] = useState<Unit[]>([])
+  const [loading, setLoading] = useState(true)
   
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showUnitForm, setShowUnitForm] = useState(false)
+
+  useEffect(() => {
+    async function fetchUnits() {
+      try {
+        const data = await getUnits(term)
+        console.log('Fetched units:', data)
+        setUnits(data)
+      } catch (error) {
+        console.error('Error fetching units:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchUnits()
+  }, [term])
 
   const handleVerify = () => {
     setShowAuthModal(false)
     setShowUnitForm(true)
   }
 
-  const handleAddUnit = (unitData: Unit) => {
-    // Add logic to save unit data
-    console.log('Adding unit:', unitData)
-    setShowUnitForm(false)
+  const handleAddUnit = async (unitData: Unit) => {
+    try {
+      const test = await createUnit({ ...unitData, term })
+      console.log('Unit added:', test)
+      const updatedUnits = await getUnits(term)
+      setUnits(updatedUnits)
+      setShowUnitForm(false)
+    } catch (error) {
+      console.error('Error adding unit:', error)
+    }
+  }
+
+  if (loading) {
+    return <div className="min-h-screen bg-[#0a192f] flex items-center justify-center">
+      <div className="text-[#64ffda]">Loading...</div>
+    </div>
   }
 
   return (

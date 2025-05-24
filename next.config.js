@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // your config options here
+  env: {
+    SANITY_STUDIO_TOKEN: process.env.SANITY_STUDIO_TOKEN
+  }
 }
 
 module.exports = nextConfig
