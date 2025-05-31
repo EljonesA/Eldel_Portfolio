@@ -11,6 +11,7 @@ export const client = createClient({
 
 export async function getUnits(term) {
   return client.fetch(`*[_type == "unit" && term == $term]{
+    _id,
     code,
     name,
     description,
@@ -25,4 +26,17 @@ export async function createUnit(unit) {
     _type: 'unit',
     ...unit
   })
+}
+
+export async function updateUnit(id, unit) {
+  return client.patch(id)
+    .set(unit)
+    .commit()
+}
+
+export async function deleteUnit(unitId, authToken) {
+  if (authToken !== process.env.NEXT_PUBLIC_ASSESSOR_TOKEN) {
+    throw new Error('Unauthorized deletion attempt')
+  }
+  return client.delete(unitId)
 }

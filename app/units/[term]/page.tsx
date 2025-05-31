@@ -2,13 +2,15 @@
 import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import AssessorModal from '../../components/AssessorModal'
-import { getUnits, createUnit } from '@/sanity/lib/client'
+import { getUnits, createUnit, updateUnit } from '@/sanity/lib/client'
+import UnitActions from '@/app/components/UnitActions'
 
 type Unit = {
+  _id?: string
   code: string
   name: string
   description: string
-  grade?: string
+  grade: string
   status: 'completed' | 'in-progress' | 'upcoming'
 }
 
@@ -48,6 +50,7 @@ export default function UnitsPage() {
   
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showUnitForm, setShowUnitForm] = useState(false)
+  const [editingUnit, setEditingUnit] = useState<Unit | null>(null)
 
   useEffect(() => {
     async function fetchUnits() {
@@ -69,15 +72,24 @@ export default function UnitsPage() {
     setShowUnitForm(true)
   }
 
-  const handleAddUnit = async (unitData: Unit) => {
+  const handleEdit = (unit: Unit) => {
+    setEditingUnit(unit)
+    setShowUnitForm(true)
+  }
+
+  const handleSubmit = async (unitData: Unit) => {
     try {
-      const test = await createUnit({ ...unitData, term })
-      console.log('Unit added:', test)
+      if (editingUnit?._id) {
+        await updateUnit(editingUnit._id, { ...unitData, term })
+      } else {
+        await createUnit({ ...unitData, term })
+      }
       const updatedUnits = await getUnits(term)
       setUnits(updatedUnits)
       setShowUnitForm(false)
+      setEditingUnit(null)
     } catch (error) {
-      console.error('Error adding unit:', error)
+      console.error('Error saving unit:', error)
     }
   }
 
@@ -100,18 +112,27 @@ export default function UnitsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {units.map((unit) => (
                 <div 
-                  key={unit.code}
+                  key={unit._id}
                   className="bg-[#112240] p-6 rounded-lg border border-[#233554]"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-[#ccd6f6] text-lg font-semibold">
                       {unit.code}: {unit.name}
                     </h3>
-                    {unit.grade && (
-                      <span className="text-[#64ffda] font-bold">
-                        Grade: {unit.grade}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {unit.grade && (
+                        <span className="text-[#64ffda] font-bold">
+                          Grade: {unit.grade}
+                        </span>
+                      )}
+                      {unit._id && (
+                        <UnitActions 
+                          unit={{...unit, _id: unit._id}}
+                          onDelete={() => setUnits(units.filter(u => u._id !== unit._id))}
+                          onEdit={() => handleEdit(unit)}
+                        />
+                      )}
+                    </div>
                   </div>
                   <p className="text-[#8892b0] text-sm mb-4">
                     {unit.description}
@@ -194,12 +215,17 @@ export default function UnitsPage() {
       {/* Unit Form Modal */}
       <AssessorModal 
         isOpen={showUnitForm} 
-        onClose={() => setShowUnitForm(false)}
+        onClose={() => {
+          setShowUnitForm(false)
+          setEditingUnit(null)
+        }}
         onVerify={() => {}}
       >
         <div className="sm:flex sm:items-start">
           <div className="w-full">
-            <h2 className="text-[#ccd6f6] text-2xl font-semibold mb-6">Add New Unit</h2>
+            <h2 className="text-[#ccd6f6] text-2xl font-semibold mb-6">
+              {editingUnit ? 'Edit Unit' : 'Add New Unit'}
+            </h2>
             <form onSubmit={(e) => {
               e.preventDefault()
               const formData = new FormData(e.currentTarget)
@@ -210,13 +236,14 @@ export default function UnitsPage() {
                 grade: formData.get('grade') as string,
                 status: formData.get('status') as 'completed' | 'in-progress' | 'upcoming',
               }
-              handleAddUnit(unitData)
+              handleSubmit(unitData)
             }}>
               <div className="space-y-4">
                 <input
                   type="text"
                   name="code"
                   placeholder="Unit Code"
+                  defaultValue={editingUnit?.code || ''}
                   className="w-full p-4 rounded-xl bg-[#0a192f] border border-[#233554] text-[#ccd6f6] 
                     placeholder-[#8892b0] focus:border-[#64ffda] focus:ring-1 focus:ring-[#64ffda]
                     transition-all duration-200"
@@ -225,6 +252,7 @@ export default function UnitsPage() {
                   type="text"
                   name="name"
                   placeholder="Unit Name"
+                  defaultValue={editingUnit?.name || ''}
                   className="w-full p-4 rounded-xl bg-[#0a192f] border border-[#233554] text-[#ccd6f6] 
                     placeholder-[#8892b0] focus:border-[#64ffda] focus:ring-1 focus:ring-[#64ffda]
                     transition-all duration-200"
@@ -232,6 +260,7 @@ export default function UnitsPage() {
                 <textarea
                   name="description"
                   placeholder="Unit Description"
+                  defaultValue={editingUnit?.description || ''}
                   className="w-full p-4 rounded-xl bg-[#0a192f] border border-[#233554] text-[#ccd6f6] 
                     placeholder-[#8892b0] focus:border-[#64ffda] focus:ring-1 focus:ring-[#64ffda]
                     transition-all duration-200"
@@ -240,12 +269,14 @@ export default function UnitsPage() {
                   type="text"
                   name="grade"
                   placeholder="Grade (optional)"
+                  defaultValue={editingUnit?.grade || ''}
                   className="w-full p-4 rounded-xl bg-[#0a192f] border border-[#233554] text-[#ccd6f6] 
                     placeholder-[#8892b0] focus:border-[#64ffda] focus:ring-1 focus:ring-[#64ffda]
                     transition-all duration-200"
                 />
                 <select
                   name="status"
+                  defaultValue={editingUnit?.status || 'upcoming'}
                   className="w-full p-4 rounded-xl bg-[#0a192f] border border-[#233554] text-[#ccd6f6] 
                     focus:border-[#64ffda] focus:ring-1 focus:ring-[#64ffda]
                     transition-all duration-200"
@@ -260,7 +291,7 @@ export default function UnitsPage() {
                 className="w-full bg-[#64ffda] text-[#0a192f] py-3 rounded-xl font-medium 
                   hover:bg-[#64ffda]/90 transition-colors mt-6"
               >
-                Add Unit
+                {editingUnit ? 'Update Unit' : 'Add Unit'}
               </button>
             </form>
           </div>
