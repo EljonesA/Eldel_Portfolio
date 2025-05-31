@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
+import Carousel from './Carousel'
 
 type Tab = 'Education' | 'Skills'
 
@@ -64,18 +65,23 @@ export default function About() {
     )
   }
 
+  const images = ['/me_trim.png', '/one.jpeg', '/two.jpeg']
+
   return (
     <section id="about" className="min-h-screen bg-[#0a192f] py-20 md:py-24">
       <div className="container mx-auto px-4 pt-16">
         <div className="max-w-7xl mx-auto h-full grid md:grid-cols-2 gap-12 md:items-center">
-          {/* Image - Hidden on mobile */}
-          <div className="hidden md:block relative aspect-square rounded-2xl overflow-hidden">
-            <Image
-              src="/var-faith.jpg"
-              alt="Faith Kajuju"
-              fill
-              className="object-cover"
-            />
+          {/* Image Section - Hidden on mobile */}
+          <div className="hidden md:block">
+            <div className="p-[2px] rounded-2xl bg-gradient-to-r from-[#64ffda] via-[#0a192f] to-[#64ffda] animate-gradient-x">
+              <div className="bg-[#0a192f] rounded-2xl">
+                <Carousel 
+                  images={images}
+                  className="aspect-square rounded-2xl overflow-hidden"
+                  interval={4000}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Content - Full width on mobile */}
@@ -135,6 +141,19 @@ export default function About() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Carousel Section */}
+      <div className="md:hidden mt-16 px-4">
+        <div className="p-[2px] rounded-lg bg-gradient-to-r from-[#64ffda] via-[#0a192f] to-[#64ffda] animate-gradient-x">
+          <div className="bg-[#0a192f] rounded-lg">
+            <Carousel 
+              images={images} 
+              className="h-[400px] w-full" 
+              interval={4000}
+            />
           </div>
         </div>
       </div>

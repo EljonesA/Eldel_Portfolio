@@ -1,10 +1,11 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 export default function Navbar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const [showAssessmentDropdown, setShowAssessmentDropdown] = useState(false)
@@ -66,6 +67,16 @@ export default function Navbar() {
     setActiveSection('assessments')
   }, [isUnitsPage, setupObservers])
 
+  const handleContactClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (isUnitsPage) {
+      router.push('/#contact')
+    } else {
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+    }
+    setIsOpen(false)  // Close mobile menu if open
+  }
+
   return (
     <nav className="fixed w-full bg-[#0a192f] border-b border-[#233554] py-2 px-4 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -124,9 +135,10 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Contact Link */}
+          {/* Contact Link - Update both desktop and mobile versions */}
           <Link
-            href="#contact"
+            href="/#contact"
+            onClick={handleContactClick}
             className={`transition-colors relative group px-3 py-2 ${
               activeSection === 'contact' ? 'text-[#64ffda]' : 'text-[#8892b0] hover:text-[#64ffda]'
             }`}
@@ -207,6 +219,20 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
+
+              {/* Update mobile menu contact link too */}
+              <Link
+                href="/#contact"
+                onClick={handleContactClick}
+                className={`transition-colors relative group px-3 py-2 ${
+                  activeSection === 'contact' ? 'text-[#64ffda]' : 'text-[#8892b0] hover:text-[#64ffda]'
+                }`}
+              >
+                Contact
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out
+                  ${activeSection === 'contact' ? 'w-full' : 'w-0 group-hover:w-full'}`}
+                />
+              </Link>
             </div>
           </div>
         )}
