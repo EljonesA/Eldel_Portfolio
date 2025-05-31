@@ -49,6 +49,7 @@ export default function About() {
                   images={images}
                   className="aspect-square rounded-2xl overflow-hidden"
                   interval={4000}
+                  sizes="(min-width: 768px) 50vw, 100vw"
                 />
               </div>
             </div>
@@ -123,6 +124,7 @@ export default function About() {
               images={images} 
               className="h-[400px] w-full" 
               interval={4000}
+              sizes="100vw"
             />
           </div>
         </div>

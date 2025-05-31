@@ -8,9 +8,10 @@ interface CarouselProps {
   images: string[]
   interval?: number
   className?: string
+  sizes: string
 }
 
-const Carousel = ({ images, interval = 5000, className = "" }: CarouselProps) => {
+const Carousel = ({ images, interval = 5000, className = "", sizes }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(true)
 
@@ -35,6 +36,7 @@ const Carousel = ({ images, interval = 5000, className = "" }: CarouselProps) =>
           src={images[currentIndex]}
           alt={`Slide ${currentIndex + 1}`}
           fill
+          sizes={sizes}
           className="object-cover rounded-lg"
         />
       </div>
