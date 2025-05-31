@@ -219,7 +219,6 @@ export default function UnitsPage() {
           setShowUnitForm(false)
           setEditingUnit(null)
         }}
-        onVerify={() => {}}
       >
         <div className="sm:flex sm:items-start">
           <div className="w-full">

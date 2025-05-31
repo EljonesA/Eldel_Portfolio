@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 interface AssessorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onVerify: () => void;
+  onVerify?: () => void;  // Keep in interface for external usage
   children: React.ReactNode;
 }
 
-export default function AssessorModal({ isOpen, onClose, onVerify, children }: AssessorModalProps) {
+export default function AssessorModal({ isOpen, onClose, children }: AssessorModalProps) {  // Remove onVerify from destructuring
   // Lock scroll when modal is open
   useEffect(() => {
     if (isOpen) {
