@@ -1,42 +1,70 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const [showAssessmentDropdown, setShowAssessmentDropdown] = useState(false)
 
-  const navItems = ['Home', 'About', 'Contact']
+  const navItems = ['Home', 'About'] // Remove Contact from here
   const assessmentTerms = ['Term 1', 'Term 2', 'Term 3']
+  const allSections = [...navItems.map(item => item.toLowerCase()), 'assessments', 'contact']
+
+  const isUnitsPage = pathname?.startsWith('/units')
 
   const setupObservers = useCallback(() => {
     const observers = new Map()
 
-    navItems.forEach(item => {
-      const section = document.getElementById(item.toLowerCase())
-      if (section) {
+    allSections.forEach(section => {
+      const element = document.getElementById(section)
+      if (element) {
         const observer = new IntersectionObserver(
           ([entry]) => {
             if (entry.isIntersecting) {
-              setActiveSection(item.toLowerCase())
+              // Special handling for home section
+              if (section === 'home') {
+                // Only set home as active if we're near the top of the page
+                if (window.scrollY < 100) {
+                  setActiveSection('home')
+                }
+              } else {
+                setActiveSection(section)
+              }
             }
           },
-          { threshold: 0.5 }
+          { 
+            threshold: section === 'home' ? 0.8 : 0.3,
+            rootMargin: section === 'home' ? '0px' : '-50px'
+          }
         )
-        observer.observe(section)
-        observers.set(item, observer)
+        observer.observe(element)
+        observers.set(section, observer)
       }
     })
 
+    // Add scroll handler for home section
+    const handleScroll = () => {
+      if (window.scrollY < 100) {
+        setActiveSection('home')
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+
     return () => {
       observers.forEach(observer => observer.disconnect())
+      window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [allSections])
 
   useEffect(() => {
-    return setupObservers()
-  }, [setupObservers])
+    if (!isUnitsPage) {
+      return setupObservers()
+    }
+    setActiveSection('assessments')
+  }, [isUnitsPage, setupObservers])
 
   return (
     <nav className="fixed w-full bg-[#0a192f] border-b border-[#233554] py-2 px-4 z-50">
@@ -53,11 +81,15 @@ export default function Navbar() {
           {navItems.map((item) => (
             <Link
               key={item}
-              href={`#${item.toLowerCase()}`}
-              className={`text-[#8892b0] hover:text-[#64ffda] transition-colors relative group px-3 py-2`}
+              href={`/${item === 'Home' ? '' : `#${item.toLowerCase()}`}`}
+              className={`transition-colors relative group px-3 py-2 ${
+                activeSection === item.toLowerCase() ? 'text-[#64ffda]' : 'text-[#8892b0] hover:text-[#64ffda]'
+              }`}
             >
               {item}
-              <span className="absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out w-0 group-hover:w-full" />
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out
+                ${activeSection === item.toLowerCase() ? 'w-full' : 'w-0 group-hover:w-full'}`} 
+              />
             </Link>
           ))}
           
@@ -67,15 +99,22 @@ export default function Navbar() {
             onMouseEnter={() => setShowAssessmentDropdown(true)}
             onMouseLeave={() => setShowAssessmentDropdown(false)}
           >
-            <button className="text-[#8892b0] hover:text-[#64ffda] transition-colors px-3 py-2">
+            <button className={`transition-colors px-3 py-2 relative ${
+              (isUnitsPage || activeSection === 'assessments') 
+                ? 'text-[#64ffda]' 
+                : 'text-[#8892b0] hover:text-[#64ffda]'
+            }`}>
               Assessments
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out
+                ${(isUnitsPage || activeSection === 'assessments') ? 'w-full' : 'w-0 group-hover:w-full'}`} 
+              />
             </button>
             {showAssessmentDropdown && (
               <div className="absolute top-full left-0 bg-[#112240] rounded-lg py-2 min-w-[120px]">
-                {assessmentTerms.map((term) => (
+                {assessmentTerms.map((term, index) => (
                   <Link
                     key={term}
-                    href="#assessments"
+                    href={`/units/${index + 1}`}
                     className="block px-4 py-2 text-[#8892b0] hover:text-[#64ffda] hover:bg-[#233554] transition-colors"
                   >
                     {term}
@@ -84,6 +123,19 @@ export default function Navbar() {
               </div>
             )}
           </div>
+
+          {/* Contact Link */}
+          <Link
+            href="#contact"
+            className={`transition-colors relative group px-3 py-2 ${
+              activeSection === 'contact' ? 'text-[#64ffda]' : 'text-[#8892b0] hover:text-[#64ffda]'
+            }`}
+          >
+            Contact
+            <span className={`absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out
+              ${activeSection === 'contact' ? 'w-full' : 'w-0 group-hover:w-full'}`} 
+            />
+          </Link>
         </div>
 
         {/* Hamburger Button */}
@@ -122,19 +174,15 @@ export default function Navbar() {
               {navItems.map((item) => (
                 <Link
                   key={item}
-                  href={`#${item.toLowerCase()}`}
-                  className={`text-[#8892b0] hover:text-[#64ffda] transition-colors relative group px-3 py-2 ${
-                    activeSection === item.toLowerCase() ? 'text-[#64ffda]' : ''
+                  href={`/${item === 'Home' ? '' : `#${item.toLowerCase()}`}`}
+                  className={`transition-colors relative group px-3 py-2 ${
+                    activeSection === item.toLowerCase() ? 'text-[#64ffda]' : 'text-[#8892b0] hover:text-[#64ffda]'
                   }`}
                   onClick={() => setIsOpen(false)}
                 >
                   {item}
-                  <span 
-                    className={`absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out ${
-                      activeSection === item.toLowerCase() 
-                        ? 'w-full' 
-                        : 'w-0 group-hover:w-full'
-                    }`}
+                  <span className={`absolute bottom-0 left-0 h-0.5 bg-[#64ffda] transition-all duration-300 ease-in-out
+                    ${activeSection === item.toLowerCase() ? 'w-full' : 'w-0 group-hover:w-full'}`}
                   />
                 </Link>
               ))}
@@ -146,10 +194,10 @@ export default function Navbar() {
                 </button>
                 {showAssessmentDropdown && (
                   <div className="absolute top-full left-0 bg-[#112240] rounded-lg py-2 min-w-[120px]">
-                    {assessmentTerms.map((term) => (
+                    {assessmentTerms.map((term, index) => (
                       <Link
                         key={term}
-                        href="#assessments"
+                        href={`/units/${index + 1}`}
                         className="block px-4 py-2 text-[#8892b0] hover:text-[#64ffda] hover:bg-[#233554] transition-colors"
                         onClick={() => setIsOpen(false)}
                       >
