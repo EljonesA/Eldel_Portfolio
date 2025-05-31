@@ -94,22 +94,22 @@ export default function UnitsPage() {
   }
 
   if (loading) {
-    return <div className="min-h-screen bg-[#0a192f] flex items-center justify-center">
+    return <div className="min-h-[calc(100vh-5.5rem)] md:min-h-[calc(100vh-4rem)] bg-[#0a192f] flex items-center justify-center">
       <div className="text-[#64ffda]">Loading...</div>
     </div>
   }
 
   return (
-    <div className="min-h-screen bg-[#0a192f] py-20 md:py-24">
-      <div className="container mx-auto px-4 pt-16">
+    <div className="min-h-[calc(100vh-5.5rem)] md:min-h-[calc(100vh-4rem)] bg-[#0a192f] py-12 md:py-16">
+      <div className="container mx-auto px-4 pt-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-6">
             <span className="text-[#64ffda]">Term {term}</span>
             <span className="text-[#ccd6f6]"> Units</span>
           </h2>
 
           {units.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {units.map((unit) => (
                 <div 
                   key={unit._id}

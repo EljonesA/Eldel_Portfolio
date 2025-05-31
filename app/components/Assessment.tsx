@@ -33,8 +33,8 @@ export default function Assessments() {
   }
 
   return (
-    <section id="assessments" className="min-h-screen bg-[#0a192f] py-20 md:py-24">
-      <div className="container mx-auto px-4 pt-16">
+    <section id="assessments" className="bg-[#0a192f] py-12">
+      <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto h-full flex flex-col">
           {/* Header */}
           <div className="text-center mb-12">

@@ -39,7 +39,7 @@ export default function Navbar() {
   }, [setupObservers])
 
   return (
-    <nav className="fixed w-full bg-[#0a192f] py-6 px-8 z-50">
+    <nav className="fixed w-full bg-[#0a192f] border-b border-[#233554] py-2 px-4 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="text-2xl font-bold px-2">

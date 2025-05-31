@@ -5,7 +5,7 @@ import Footer from './components/Footer'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: "Hi! I'm Faith Kajuju",
+  title: "Eldel Apiyo",
   description: "Zoho Solutions Expert",
   icons: {
     icon: '/favicon.ico',
@@ -30,7 +30,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">      <body className={`${montserrat.className} antialiased`}>
+    <html lang="en">      
+    <body className={`${montserrat.className} antialiased`}>
         <Navbar />
         {children}
         <Footer />
