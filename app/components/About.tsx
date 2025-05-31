@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import Image from 'next/image'
 import Carousel from './Carousel'
 
 type Tab = 'Education' | 'Skills'
@@ -34,35 +33,6 @@ export default function About() {
           desc: 'Bachelor of Technology in Information Technology',
         }
       ], 
-  }
-
-  const renderTabContent = () => {
-    if (activeTab === 'Skills') {
-      return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {tabContent.Skills.map((skill, idx) => (
-            <div 
-              key={idx} 
-              className="bg-[#112240] p-5 rounded-lg border border-[#233554] hover:border-[#64ffda]/50 transition-colors"
-            >
-              <h3 className="text-base font-semibold text-[#ccd6f6] mb-2">{skill.title}</h3>
-              <p className="text-[#8892b0] text-sm leading-relaxed">{skill.desc}</p>
-            </div>
-          ))}
-        </div>
-      )
-    }
-
-    return (
-      <div className="space-y-6">
-        {tabContent[activeTab].map((item, index) => (
-          <div key={index} className="space-y-2">
-            <h3 className="text-base font-semibold text-[#ccd6f6]">{item.title}</h3>
-            <p className="text-[#8892b0] text-sm leading-relaxed">{item.desc}</p>
-          </div>
-        ))}
-      </div>
-    )
   }
 
   const images = ['/me_trim.png', '/one.jpeg', '/two.jpeg']

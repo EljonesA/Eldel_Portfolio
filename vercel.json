@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "images": {
+    "domains": ["cdn.sanity.io"]
+  }
+}

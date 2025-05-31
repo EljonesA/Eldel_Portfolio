@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import type { ContactFormData } from '@/types'
 
 export async function POST(req: Request) {
   try {
-    const { name, email, message } = await req.json()
+    const body = await req.json()
+    const { name, email, message } = body as ContactFormData
+
+    if (!process.env.EMAIL_PASSWORD) {
+      throw new Error('EMAIL_PASSWORD environment variable is not set')
+    }
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -46,6 +52,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: 'Email sent successfully' }, { status: 200 })
   } catch (error) {
     console.error('Error sending email:', error)
-    return NextResponse.json({ message: 'Error sending email' }, { status: 500 })
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : 'Error sending email' }, 
+      { status: 500 }
+    )
   }
 }

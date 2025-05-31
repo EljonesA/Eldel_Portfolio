@@ -1,9 +1,10 @@
 'use client'
 import { useState } from 'react'
 import { FaInstagram, FaLinkedin } from 'react-icons/fa'
+import type { ContactFormData } from '@/types'
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     message: ''

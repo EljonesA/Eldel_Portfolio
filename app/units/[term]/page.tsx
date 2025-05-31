@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import AssessorModal from '../../components/AssessorModal'
@@ -28,7 +28,7 @@ function EmptyState() {
             No Units Available Yet
           </h3>
           <p className="text-[#8892b0] text-sm leading-relaxed">
-            Units for this term haven't been added to the system yet. 
+            Units for this term haven&apos;t been added to the system yet. 
             Check back later for updates on your academic progress.
           </p>
           <div className="mt-6">

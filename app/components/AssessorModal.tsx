@@ -22,17 +22,6 @@ export default function AssessorModal({ isOpen, onClose, onVerify, children }: A
     };
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const token = new FormData(e.currentTarget).get('token') as string;
-    
-    if (token === process.env.NEXT_PUBLIC_ASSESSOR_TOKEN) {
-      onVerify();
-    } else {
-      alert('Invalid access token');
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
